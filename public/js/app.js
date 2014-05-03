@@ -1,7 +1,10 @@
 var MNA = {};
 
+var config = {
+  endpoint : 'http://localhost:3000/sites/'
+};
 
-MNA.View = (function( window, document, undefined ) {
+(function( window, document, $ ) {
   
   function getNewsItem( item ) {
     return '<a href="' + item.url + '" class="list-group-item">' +
@@ -10,7 +13,7 @@ MNA.View = (function( window, document, undefined ) {
       '</a>';
   };
 
-  function renderNews( items ) {
+  function getNewsList( items ) {
     var result = '';
 
     items.forEach(function( element ) {
@@ -18,12 +21,32 @@ MNA.View = (function( window, document, undefined ) {
     });
 
     return result;
-  }
-
-  return {
-    renderItem : getNewsItem,
-    renderNewsList : renderNews
   };
 
-})( window, document, undefined );
+  MNA.View = {
+    renderItem : getNewsItem,
+    renderNewsList : getNewsList
+  };
+
+  MNA.Controller = (function() {
+    var render = function render( id ) {
+      $.getJSON( config.endpoint + id )
+        .done(function( data ) {
+          $( '#' + id + '> .list-group' ).html( MNA.View.renderNewsList( data ) );
+        });
+    }
+    return {render:render};
+  })();
+
+  function render() {
+    // reset cenas aqui
+    MNA.Controller.render('hn');
+  };
+
+  MNA.render = render;
+
+  $( document ).ready(function() {
+    MNA.render();
+  });
+})( window, document, jQuery );
 

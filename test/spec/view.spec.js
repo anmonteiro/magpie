@@ -1,11 +1,4 @@
 describe('Render', function() {
-
-  beforeEach(function() {
-  });
-
-  afterEach(function() {
-  });
-
   it('One news item', function() {
     var item = {
       "url" : "http://www.computerworld.com/s/article/print/9248070/SanDisk_announces_4TB_SSD_hopes_for_8TB_next_year",
