@@ -1,5 +1,43 @@
 var MNA = {};
 
+var templateStore = {
+  global : {
+    spinner : [
+      '<div id="circularG" class="center-block spinner">',
+      '  <div id="circularG_1" class="circularG">',
+      '  </div>',
+      '  <div id="circularG_2" class="circularG">',
+      '  </div>',
+      '  <div id="circularG_3" class="circularG">',
+      '  </div>',
+      '  <div id="circularG_4" class="circularG">',
+      '  </div>',
+      '  <div id="circularG_5" class="circularG">',
+      '  </div>',
+      '  <div id="circularG_6" class="circularG">',
+      '  </div>',
+      '  <div id="circularG_7" class="circularG">',
+      '  </div>',
+      '  <div id="circularG_8" class="circularG">',
+      '  </div>',
+      '</div>'
+    ].join( '' ),
+  },
+  news : {
+    list : [
+      '<div class="list-group">',
+      '</div>'
+    ].join( '' ),
+    item : [
+      '<a class="list-group-item">',
+      '  <h4 class="list-group-item-heading"></h4>',
+      '  <p class="list-group-item-text"></p>',
+      '</a>'
+    ].join( '' ),
+
+  }
+};
+
 (function( window, document, $ ) {
   
   var config = {
@@ -19,57 +57,21 @@ var MNA = {};
   };
 
   MNA.View = (function() {
-    var spinner = [
-      '<div id="circularG" class="center-block spinner">',
-      '  <div id="circularG_1" class="circularG">',
-      '  </div>',
-      '  <div id="circularG_2" class="circularG">',
-      '  </div>',
-      '  <div id="circularG_3" class="circularG">',
-      '  </div>',
-      '  <div id="circularG_4" class="circularG">',
-      '  </div>',
-      '  <div id="circularG_5" class="circularG">',
-      '  </div>',
-      '  <div id="circularG_6" class="circularG">',
-      '  </div>',
-      '  <div id="circularG_7" class="circularG">',
-      '  </div>',
-      '  <div id="circularG_8" class="circularG">',
-      '  </div>',
-      '</div>'
-    ].join( '' );
 
-    spinner = $( spinner );
+    spinner = $( templateStore.global.spinner );
     
     function getNewsItem( item ) {
-      var tmpl = [
-        '<a class="list-group-item">',
-        ' <h4 class="list-group-item-heading"></h4>',
-        '  <p class="list-group-item-text"></p>',
-        '</a>'
-      ].join( '' );
-
-      var $newsElem = $( tmpl );
+      var $newsElem = $( templateStore.news.item );
 
       $newsElem.prop( 'href', item.url );
       $newsElem.find( '.list-group-item-heading' ).text( item.title );
       $newsElem.find( '.list-group-item-text' ).text( item.src );
-      /*
-      return '<a href="' + item.url + '" class="list-group-item">' +
-        '  <h4 class="list-group-item-heading">' + utils.htmlEntities( item.title ) + '</h4>' +
-        '  <p class="list-group-item-text">' + item.src + '</p>' +
-        '</a>';
-      */
+
       return $newsElem;
     };
 
     function getNewsList( items ) {
-      var tmpl = [
-        '<div class="list-group">',
-        '</div>'
-      ].join( '' ),
-        result = $( tmpl );
+      var result = $( templateStore.news.list );
 
       items.forEach(function( element ) {
         result.append( getNewsItem( element ) );
@@ -87,11 +89,16 @@ var MNA = {};
     }
 
     function toggleBusy( $elem, data ) {
-      toAppend = data || spinner;
+      var toAppend = data || spinner;
+
+      if ( typeof $elem === 'string' ) {
+        $elem = $( $elem );
+      }
 
       if( data ) {
         $elem.children().toggleClass('fade');
         setTimeout(function() {
+          $elem.find( '.spinner' ).remove();
           $elem.prepend( toAppend );
         }, 500);
       }
@@ -104,6 +111,7 @@ var MNA = {};
     }
 
      return {
+      getNewsItem : getNewsItem,
       getNewsList : getNewsList,
       getTabID  : getTabID.bind( MNA ),
       toggleBusy : toggleBusy
@@ -123,16 +131,18 @@ var MNA = {};
       });
     };
 
-    var renderNews = function renderNews( id ) {
+    function renderNews( id ) {
+      var self = this;
+
       if ( !id ) {
         id = this.View.getTabID( 0 );
       }
 
+      this.View.toggleBusy( '#' + id );
+
       $.getJSON( config.endpoint + id )
         .done(function( data ) {
-          $( '#' + id ).html( MNA.View.getNewsList( data ) );
-          // save fresh data locally
-          //utils.store( 'mna.' + id , data );
+          self.View.toggleBusy( '#' + id, MNA.View.getNewsList( data ) );
         });
     };
     return {
@@ -144,7 +154,6 @@ var MNA = {};
   function init() {
     this.$tabs = $( '.nav.nav-tabs > li' );
     this.Controller.bindEvents();
-
     this.Controller.renderNews();
   };
 
