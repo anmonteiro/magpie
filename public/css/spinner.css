@@ -8,6 +8,10 @@
   -webkit-transition: opacity .5s ease-in-out;
 }
 
+.spinner + * {
+  display: none !important;
+}
+
 .fade {
   opacity: 1;
 }

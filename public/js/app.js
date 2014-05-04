@@ -40,18 +40,39 @@ var MNA = {};
       '</div>'
     ].join( '' );
 
+    spinner = $( spinner );
+    
     function getNewsItem( item ) {
+      var tmpl = [
+        '<a class="list-group-item">',
+        ' <h4 class="list-group-item-heading"></h4>',
+        '  <p class="list-group-item-text"></p>',
+        '</a>'
+      ].join( '' );
+
+      var $newsElem = $( tmpl );
+
+      $newsElem.prop( 'href', item.url );
+      $newsElem.find( '.list-group-item-heading' ).text( item.title );
+      $newsElem.find( '.list-group-item-text' ).text( item.src );
+      /*
       return '<a href="' + item.url + '" class="list-group-item">' +
-        '  <h4 class="list-group-item-heading">' + item.title + '</h4>' +
+        '  <h4 class="list-group-item-heading">' + utils.htmlEntities( item.title ) + '</h4>' +
         '  <p class="list-group-item-text">' + item.src + '</p>' +
         '</a>';
+      */
+      return $newsElem;
     };
 
     function getNewsList( items ) {
-      var result = '';
+      var tmpl = [
+        '<div class="list-group">',
+        '</div>'
+      ].join( '' ),
+        result = $( tmpl );
 
       items.forEach(function( element ) {
-        result += getNewsItem( element );
+        result.append( getNewsItem( element ) );
       });
 
       return result;
@@ -71,11 +92,11 @@ var MNA = {};
       if( data ) {
         $elem.children().toggleClass('fade');
         setTimeout(function() {
-          $elem.empty().append( toAppend );
+          $elem.prepend( toAppend );
         }, 500);
       }
       else {
-        $elem.empty().append( toAppend );
+        $elem.prepend( toAppend );
         setTimeout(function() {
           $elem.children().toggleClass('fade');
         }, 500);
@@ -109,8 +130,7 @@ var MNA = {};
 
       $.getJSON( config.endpoint + id )
         .done(function( data ) {
-          $( '#' + id + '> .list-group' ).html( MNA.View.getNewsList( data ) );
-
+          $( '#' + id ).html( MNA.View.getNewsList( data ) );
           // save fresh data locally
           //utils.store( 'mna.' + id , data );
         });
