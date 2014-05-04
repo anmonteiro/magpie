@@ -19,6 +19,26 @@ var MNA = {};
   };
 
   MNA.View = (function() {
+    var spinner = [
+      '<div id="circularG" class="center-block spinner">',
+      '  <div id="circularG_1" class="circularG">',
+      '  </div>',
+      '  <div id="circularG_2" class="circularG">',
+      '  </div>',
+      '  <div id="circularG_3" class="circularG">',
+      '  </div>',
+      '  <div id="circularG_4" class="circularG">',
+      '  </div>',
+      '  <div id="circularG_5" class="circularG">',
+      '  </div>',
+      '  <div id="circularG_6" class="circularG">',
+      '  </div>',
+      '  <div id="circularG_7" class="circularG">',
+      '  </div>',
+      '  <div id="circularG_8" class="circularG">',
+      '  </div>',
+      '</div>'
+    ].join( '' );
 
     function getNewsItem( item ) {
       return '<a href="' + item.url + '" class="list-group-item">' +
@@ -45,13 +65,27 @@ var MNA = {};
         id.slice( id.indexOf( '#' ) + 1 );
     }
 
-    function toggleBusy() {
+    function toggleBusy( $elem, data ) {
+      toAppend = data || spinner;
 
+      if( data ) {
+        $elem.children().toggleClass('fade');
+        setTimeout(function() {
+          $elem.empty().append( toAppend );
+        }, 500);
+      }
+      else {
+        $elem.empty().append( toAppend );
+        setTimeout(function() {
+          $elem.children().toggleClass('fade');
+        }, 500);
+      }
     }
 
      return {
       getNewsList : getNewsList,
-      getTabID  : getTabID.bind( MNA )
+      getTabID  : getTabID.bind( MNA ),
+      toggleBusy : toggleBusy
     };
   })();
 
