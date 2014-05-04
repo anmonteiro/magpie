@@ -1,5 +1,5 @@
 describe('Render', function() {
-  it('One news item', function() {
+  /*it('One news item', function() {
     var item = {
       "url" : "http://www.computerworld.com/s/article/print/9248070/SanDisk_announces_4TB_SSD_hopes_for_8TB_next_year",
       "src" : " (computerworld.com) ",
@@ -11,11 +11,11 @@ describe('Render', function() {
       '</a>'
     ].join( '' );
 
-    var newsItem = MNA.View.renderItem( item );
+    var newsItem = MNA.View.getNewsItem( item );
     expect( newsItem ).toEqual( itemHTML );
 
   });
-
+*/
   it('A group of items', function() {
     var group = [{
       "url" : "http://www.computerworld.com/s/article/print/9248070/SanDisk_announces_4TB_SSD_hopes_for_8TB_next_year",
@@ -45,7 +45,7 @@ describe('Render', function() {
       '</a>'
     ].join( '' );
 
-    var groupOfItems = MNA.View.renderNewsList( group );
+    var groupOfItems = MNA.View.getNewsList( group );
     expect( groupOfItems ).toEqual( groupHTML );
   });
 });
