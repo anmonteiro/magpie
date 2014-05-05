@@ -41,7 +41,7 @@ var templateStore = {
 (function( window, document, $ ) {
   
   var config = {
-    endpoint : 'http://localhost:3000/sites/'
+    endpoint : 'http://mna.herokuapp.com/sites/'
   };
 
   var utils = {
