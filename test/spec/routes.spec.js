@@ -1,5 +1,5 @@
 describe('Routes', function() {
-jasmine.getFixtures().fixturesPath = '../../../../';
+  jasmine.getFixtures().fixturesPath = '../../../../';
   describe('Clicking tabs', function() {
     var cb;
 
