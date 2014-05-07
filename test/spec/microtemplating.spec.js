@@ -35,13 +35,23 @@ var micro = (function(){
 })();
 
 describe('Microtemplating', function() {
-  var plain_template = '<div><p>test paragraph</p></div>';
+  var plain_template = '<div><p>test paragraph</p></div>',
+    templ;
+
   beforeEach(function() {
     
   });
 
-  it('', function() {
+  afterEach(function() {
+    templ = null;
+  });
 
+  it('with plain templates', function() {
+    templ = micro( plain_template );
+
+    expect(function() {
+      templ();
+    }).not.toThrow();
   });
 });
 
