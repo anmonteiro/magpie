@@ -58,7 +58,7 @@ var templateStore = {
 
   MNA.View = (function() {
 
-    spinner = $( templateStore.global.spinner );
+    var spinner = $( templateStore.global.spinner );
     
     function getNewsItem( item ) {
       var $newsElem = $( templateStore.news.item );
