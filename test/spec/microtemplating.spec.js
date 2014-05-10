@@ -34,10 +34,6 @@ var micro = (function(){
   };
 })();
 
-var mTempl = function( str, obj ) {
-  return micro( str, obj || '' );
-};
-
 describe('Microtemplating', function() {
   var templ,
     template;
