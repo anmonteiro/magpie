@@ -1,43 +1,5 @@
 var MNA = {};
 
-var templateStore = {
-  global : {
-    spinner : [
-      '<div id="circularG" class="center-block spinner">',
-      '  <div id="circularG_1" class="circularG">',
-      '  </div>',
-      '  <div id="circularG_2" class="circularG">',
-      '  </div>',
-      '  <div id="circularG_3" class="circularG">',
-      '  </div>',
-      '  <div id="circularG_4" class="circularG">',
-      '  </div>',
-      '  <div id="circularG_5" class="circularG">',
-      '  </div>',
-      '  <div id="circularG_6" class="circularG">',
-      '  </div>',
-      '  <div id="circularG_7" class="circularG">',
-      '  </div>',
-      '  <div id="circularG_8" class="circularG">',
-      '  </div>',
-      '</div>'
-    ].join( '' ),
-  },
-  news : {
-    list : [
-      '<div class="list-group">',
-      '</div>'
-    ].join( '' ),
-    item : [
-      '<a class="list-group-item">',
-      '  <h4 class="list-group-item-heading"></h4>',
-      '  <p class="list-group-item-text"></p>',
-      '</a>'
-    ].join( '' ),
-
-  }
-};
-
 (function( window, document, $ ) {
   
   var config = {
@@ -57,27 +19,66 @@ var templateStore = {
   };
 
   MNA.View = (function() {
-
-    var spinner = $( templateStore.global.spinner );
     
+    // Simple JavaScript Templating
+    // John Resig - http://ejohn.org/ - MIT Licensed
+    var renderTemplate = (function(){
+      var cache = {};
+
+      return function tmpl(str, data){
+        // Figure out if we're getting a template, or if we need to
+        // load the template - and be sure to cache the result.
+        var fn = !/\W/.test(str) ?
+          cache[str] = cache[str] ||
+            tmpl(document.getElementById(str).innerHTML) :
+
+          // Generate a reusable function that will serve as a template
+          // generator (and which will be cached).
+          new Function("obj",
+            "var p=[],print=function(){p.push.apply(p,arguments);};" +
+
+            // Introduce the data as local variables using with(){}
+            "with(obj){p.push('" +
+
+            // Convert the template into pure JavaScript
+            str
+              .replace(/[\r\t\n]/g, " ")
+              .split("<%").join("\t")
+              .replace(/((^|%>)[^\t]*)'/g, "$1\r")
+              .replace(/\t=(.*?)%>/g, "',$1,'")
+              .split("\t").join("');")
+              .split("%>").join("p.push('")
+              .split("\r").join("\\'")
+          + "');}return p.join('');");
+
+        // Provide some basic currying to the user
+        return data ? fn( data ) : fn;
+      };
+    })();
+
+    var spinner = $( renderTemplate( 'spinner' )( '' ) );
+
     function getNewsItem( item ) {
-      var $newsElem = $( templateStore.news.item );
-
-      $newsElem.prop( 'href', item.url );
-      $newsElem.find( '.list-group-item-heading' ).text( item.title );
-      $newsElem.find( '.list-group-item-text' ).text( item.src );
-
-      return $newsElem;
+      return $( renderTemplate( 'newsItem', {
+        item : item
+      }));
     };
 
     function getNewsList( items ) {
-      var result = $( templateStore.news.list );
+      /*var result = $( templateStore.news.list );
 
       items.forEach(function( element ) {
         result.append( getNewsItem( element ) );
       });
 
-      return result;
+      return result;*/
+      $( renderTemplate( 'newsList', {
+        items : items
+      }));
+
+      return $( renderTemplate( 'newsList', {
+        items : items
+      }));
     };
 
     function getTabID( tabNo ) {

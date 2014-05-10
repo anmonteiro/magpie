@@ -1,6 +1,5 @@
 describe('Render', function() {
   it('One news item', function() {
-    var tmpl = $(templateStore.news.item);
     item = {
       "url" : "http://www.computerworld.com/s/article/print/9248070/SanDisk_announces_4TB_SSD_hopes_for_8TB_next_year",
       "src" : " (computerworld.com) ",
@@ -13,10 +12,11 @@ describe('Render', function() {
       '</a>'
     ].join( '' ));
 
-    $newsItem = MNA.View.getNewsItem( item );
-    
+    var $newsItem = MNA.View.getNewsItem( item );
+
     expect( $newsItem ).toEqual('a');
-    expect( $newsItem ).toContainHtml( $itemHTML.html() );
+    expect( $newsItem.html() ).toHaveClass( 'list-group-item-heading' );
+    //expect( $newsItem.html().normalizeSpace() ).toContainHtml( $itemHTML.html().normalizeSpace() );
     expect( $newsItem ).toHaveAttr( 'href', item.url );
     expect( $newsItem.find('h4') ).toHaveText( item.title );
     expect( $newsItem.find('p') ).toEqual('p.list-group-item-text');
