@@ -34,9 +34,13 @@ var micro = (function(){
   };
 })();
 
+var mTempl = function( str, obj ) {
+  return micro( str, obj || '' );
+};
+
 describe('Microtemplating', function() {
-  var plain_template = '<div><p>test paragraph</p></div>',
-    templ;
+  var templ,
+    template;
 
   beforeEach(function() {
     
@@ -44,14 +48,40 @@ describe('Microtemplating', function() {
 
   afterEach(function() {
     templ = null;
+    template = null;
   });
 
-  it('with plain templates', function() {
-    templ = micro( plain_template );
+  it('with static templates', function() {
+    template = '<div><p>test paragraph</p></div>';
+
+    templ = micro( template );
 
     expect(function() {
       templ();
+    }).toThrow();
+
+    expect(function() {
+      // because microtemplating uses the 'with' keyword, we need to pass any
+      // javascript type in order to render a static template
+      templ('');
     }).not.toThrow();
+
+    expect( templ('') ).toEqual( template );
+  });
+
+  it('with "<%= %>" syntax and 1 argument', function() {
+    template = '<div><p><%= name %></p></div>'
+    templ = micro( template );
+
+    expect( templ({ name : 'test paragraph' }) ).toEqual( '<div><p>test paragraph</p></div>' );
+
+  });
+
+  it('with "<%= %>" syntax and 2 arguments', function() {
+    template = '<div><p><%= name %></p></div>'
+    templ = micro( template, { name : 'test paragraph' } );
+
+    expect( templ ).toEqual( '<div><p>test paragraph</p></div>' );
   });
 });
 
