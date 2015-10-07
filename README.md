@@ -1,4 +1,4 @@
-mna
+magpie
 ===
 
 My News Aggregator

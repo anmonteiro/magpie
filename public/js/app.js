@@ -1,9 +1,9 @@
-var MNA = {};
+var Magpie = {};
 
 (function( window, document, $ ) {
-  
+
   var config = {
-    endpoint : 'http://mna.herokuapp.com/sites/'
+    endpoint : 'http://magpie-s.herokuapp.com/sites/'
   };
 
   var utils = {
@@ -18,8 +18,8 @@ var MNA = {};
     }
   };
 
-  MNA.View = (function() {
-    
+  Magpie.View = (function() {
+
     // Simple JavaScript Templating
     // John Resig - http://ejohn.org/ - MIT Licensed
     var renderTemplate = (function(){
@@ -114,12 +114,12 @@ var MNA = {};
      return {
       getNewsItem : getNewsItem,
       getNewsList : getNewsList,
-      getTabID  : getTabID.bind( MNA ),
+      getTabID  : getTabID.bind( Magpie ),
       toggleBusy : toggleBusy
     };
   })();
 
-  MNA.Controller = (function() {
+  Magpie.Controller = (function() {
     function bindEvents() {
       var self = this;
       this.$tabs.on( 'click', function( evt ) {
@@ -143,12 +143,12 @@ var MNA = {};
 
       $.getJSON( config.endpoint + id )
         .done(function( data ) {
-          self.View.toggleBusy( '#' + id, MNA.View.getNewsList( data ) );
+          self.View.toggleBusy( '#' + id, Magpie.View.getNewsList( data ) );
         });
     };
     return {
-      renderNews : renderNews.bind( MNA ),
-      bindEvents : bindEvents.bind( MNA )
+      renderNews : renderNews.bind( Magpie ),
+      bindEvents : bindEvents.bind( Magpie )
     };
   })();
 
@@ -158,11 +158,10 @@ var MNA = {};
     this.Controller.renderNews();
   };
 
-  MNA.init = init;
+  Magpie.init = init;
 
 
   $( document ).ready(function() {
-    MNA.init();
+    Magpie.init();
   });
 })( window, document, jQuery );
-
